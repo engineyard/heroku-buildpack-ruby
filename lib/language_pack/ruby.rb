@@ -14,9 +14,9 @@ class LanguagePack::Ruby < LanguagePack::Base
   NAME                 = "ruby"
   LIBYAML_VERSION      = "0.1.6"
   LIBYAML_PATH         = "libyaml-#{LIBYAML_VERSION}"
-  BUNDLER_VERSION      = "1.9.7"
+  BUNDLER_VERSION      = "1.10.6"
   BUNDLER_GEM_PATH     = "bundler-#{BUNDLER_VERSION}"
-  DEFAULT_RUBY_VERSION = "ruby-2.0.0"
+  DEFAULT_RUBY_VERSION = "ruby-2.2.3"
   RBX_BASE_URL         = "http://binaries.rubini.us/heroku"
   NODE_BP_PATH         = "vendor/node/bin"
 
@@ -253,7 +253,7 @@ SHELL
 
       # TODO when buildpack-env-args rolls out, we can get rid of
       # ||= and the manual setting below
-      config_vars = default_config_vars.each do |key, value|
+       default_config_vars.each do |key, value|
         ENV[key] ||= value
       end
 
@@ -489,9 +489,7 @@ ERROR
   def install_libyaml(dir)
     instrument 'ruby.install_libyaml' do
       FileUtils.mkdir_p dir
-      Dir.chdir(dir) do |dir|
-        @fetchers[:buildpack].fetch_untar("#{LIBYAML_PATH}.tgz")
-      end
+      Dir.chdir(dir) { |_| @fetchers[:buildpack].fetch_untar("#{LIBYAML_PATH}.tgz") }
     end
   end
 
