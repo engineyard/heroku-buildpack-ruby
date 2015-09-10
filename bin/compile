@@ -3,10 +3,12 @@
 # sync output
 $stdout.sync = true
 
-cache_dir = ARGV[1]
 compile_extensions_dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'compile-extensions'))
 
-exit(44) unless system("#{compile_extensions_dir}/bin/check_stack_support")
+unless system("#{compile_extensions_dir}/bin/check_stack_support")
+  Kernel.puts "missing #{compile_extensions_dir}/bin/check_stack_support"
+  exit(44)
+end
 
 $:.unshift File.expand_path("../../lib", __FILE__)
 require "language_pack"
@@ -19,9 +21,7 @@ begin
     if pack = LanguagePack.detect(ARGV[0], ARGV[1])
       LanguagePack::ShellHelpers.initialize_env(ARGV[2])
       pack.topic("Compiling #{pack.name}")
-      pack.log("compile") do
-        pack.compile
-      end
+      pack.log("compile") { pack.compile }
     end
   end
 rescue Exception => e
