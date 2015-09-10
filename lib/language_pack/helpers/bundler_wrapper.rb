@@ -110,14 +110,14 @@ class LanguagePack::Helpers::BundlerWrapper
   end
 
   private
+
   def fetch_bundler
     instrument 'fetch_bundler' do
       return true if Dir.exists?(bundler_path)
       FileUtils.mkdir_p(bundler_path)
-      Dir.chdir(bundler_path) do
-        @fetcher.fetch_untar(@bundler_tar)
-      end
-      Dir["bin/*"].each {|path| `chmod 755 #{path}` }
+      #Dir.chdir(bundler_path) { @fetcher.fetch_untar(@bundler_tar) }
+      #Dir["bin/*"].each {|path| `chmod 755 #{path}` }
+      `gem install bundler -v #{LanguagePack::Ruby::BUNDLER_VERSION} --install-dir #{bundler_path}`
     end
   end
 
